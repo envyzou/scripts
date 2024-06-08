@@ -1,13 +1,13 @@
 const wsurl = "ws://127.0.0.1:2019";
 var ws = null;
 const propsId = Object.keys(
-    document.querySelector(".webcast-chatroom___list")
+    document.querySelector(".ReactVirtualized__List")
 )[1];
-const roomJoinDom = document.querySelector(
-    ".webcast-chatroom___bottom-message"
-);
-const chatDom = document.querySelector(".webcast-chatroom___items").children[0];
-const observer = new MutationObserver((mutationsList) => {
+/*const roomJoinDom = document.querySelector(
+    ".ReactVirtualized__Grid__innerScrollContainer"
+);*/
+const chatDom = document.querySelector(".ReactVirtualized__Grid__innerScrollContainer");
+/*const observer = new MutationObserver((mutationsList) => {
     for (let mutation of mutationsList) {
         if (mutation.type === "childList" && mutation.addedNodes.length) {
             let dom = mutation.addedNodes[0];
@@ -27,44 +27,18 @@ const observer = new MutationObserver((mutationsList) => {
             }
         }
     }
-});
+});*/
+//document.querySelector(".ReactVirtualized__Grid__innerScrollContainer").children[5]['__reactProps$olj20vra1j'].props.children.props.children.props.data
 const chatObserverrom = new MutationObserver((mutationsList, observer) => {
     for (let mutation of mutationsList) {
         if (mutation.type === "childList" && mutation.addedNodes.length) {
             let dom = mutation.addedNodes[0];
-            let { payload } = dom[propsId].children.props.message;
-            let userinfo = getUser(payload.user);
-            let message_info = null;
-            switch (payload.common.method) {
-                case 'WebcastGiftMessage':
-                    message_info = {
-                        message_type: "gift",
-                        gift_combo_count: payload.gift.combo_count, // 个数
-                        gift_id: payload.gift.id, // id
-                        gift_url: payload.gift.icon.url_list[0], // id
-                        gift_name: payload.gift.name, // id
-                        gift_total_count: payload.total_count, // id
-                        message_describe: `${userinfo.user_nickName} 送出了 ${payload.gift.name} x${payload.total_count}`,
-                    };
-                    break
-                case 'WebcastChatMessage':
-                    message_info = {
-                        message_type: "text",
-                        content: payload.content,
-                        message_describe: `${userinfo.user_nickName} : ${payload.content}`,
-                    };
-                    break
-                case 'WebcastEmojiChatMessage':
-                    message_info = {
-                        message_type: "text",
-                        content: payload.content,
-                        message_describe: `${userinfo.user_nickName} : ${payload.default_content}`,
-                    };
-                    break
-            }
-            const msg = Object.assign(createMessage(), userinfo, message_info);
-            if (msg.message_type) {
-                ws_send(msg);
+            let { props } = dom[propsId].children;
+            let message_info = props.data;
+            console.log("服务器监听到一条消息,如下：");
+            console.log(message_info);
+            if (message_info.commentContent) {
+                ws_send(message_info);
             }
 
         }
@@ -141,8 +115,8 @@ function init() {
     };
     ws.onopen = () => {
         console.log("连接ws成功:" + wsurl);
-        console.log("- 欢迎加入 QQ 群 590109588：https://qm.qq.com/q/YAs31tGvUm");
-        observer.observe(roomJoinDom, { childList: true });
+        console.log("- 欢迎加入");
+        //observer.observe(roomJoinDom, { childList: true });
         chatObserverrom.observe(chatDom, { childList: true });
     };
 
