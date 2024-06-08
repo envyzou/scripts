@@ -12,6 +12,8 @@ const observer = new MutationObserver((mutationsList) => {
         if (mutation.type === "childList" && mutation.addedNodes.length) {
             let dom = mutation.addedNodes[0];
             let { user, common } = dom[propsId].children.props.message.payload;
+            console.log("监听到如下消息：");
+             console.log(dom[propsId].children.props.message.payload);
             if (user.short_id) {
                 let message_info = getUser(user);
                 if (common.anchor_fold_type_v2 === "1") {
