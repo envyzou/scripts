@@ -16,7 +16,7 @@ const chatDom = document.querySelector(".ReactVirtualized__Grid__innerScrollCont
                 let message_info = getUser(user);
                 if (common.anchor_fold_type_v2 === "1") {
                     message_info.message_type = "like";
-                    message_info.message_describe = `${message_info.user_nickName} 为主播点赞`;
+                    message_info.message_describe = `${message_info.user_nickName} 为主播点赞Le`;
                 }
                 if (common.anchor_fold_type_v2 === "3") {
                     message_info.message_type = "join";
